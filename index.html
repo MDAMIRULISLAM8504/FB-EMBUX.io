@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EMBUX - Facebook Account Sales</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #1877f2;
+            --secondary: #42b72a;
+            --dark: #1c1e21;
+            --light: #f0f2f5;
+            --danger: #e74c3c;
+            --warning: #f39c12;
+            --gray: #65676b;
+        }
+
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo i {
+            color: var(--primary);
+            font-size: 28px;
+        }
+
+        .logo h1 {
+            font-size: 28px;
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 600;
+            font-size: 16px;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: var(--primary);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--dark);
+            cursor: pointer;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 60px 0;
+            background: linear-gradient(135deg, #1877f2 0%, #0d5bb5 100%);
+            color: white;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .hero h2 {
+            font-size: 42px;
+            margin-bottom: 15px;
+        }
+
+        .hero p {
+            font-size: 18px;
+            max-width: 700px;
+            margin: 0 auto 25px;
+            opacity: 0.9;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background-color: var(--secondary);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 18px;
+            transition: all 0.3s;
+        }
+
+        .cta-button:hover {
+            background-color: #36a420;
+            transform: translateY(-3px);
+        }
+
+        /* Products Section */
+        .section-title {
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .section-title h2 {
+            font-size: 32px;
+            color: var(--dark);
+            display: inline-block;
+            padding-bottom: 10px;
+        }
+
+        .section-title h2:after {
+            content: '';
+            position: absolute;
+            width: 80px;
+            height: 4px;
+            background-color: var(--primary);
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+
+        .products {
+            padding: 60px 0;
+            background-color: white;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .product-card {
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid #e4e6eb;
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+
+        .product-header {
+            background-color: var(--primary);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .product-header h3 {
+            font-size: 22px;
+            margin-bottom: 5px;
+        }
+
+        .product-price {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .product-price span {
+            font-size: 16px;
+            font-weight: 400;
+        }
+
+        .product-body {
+            padding: 25px;
+        }
+
+        .product-features {
+            list-style: none;
+            margin-bottom: 20px;
+        }
+
+        .product-features li {
+            padding: 8px 0;
+            border-bottom: 1px dashed #e4e6eb;
+            display: flex;
+            align-items: center;
+        }
+
+        .product-features li:last-child {
+            border-bottom: none;
+        }
+
+        .product-features i {
+            color: var(--secondary);
+            margin-right: 10px;
+            font-size: 14px;
+        }
+
+        .product-button {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .product-button:hover {
+            background-color: #166fe5;
+        }
+
+        /* Form Section */
+        .form-section {
+            padding: 60px 0;
+            background-color: var(--light);
+        }
+
+        .form-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 10px;
+            padding: 40px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+
+        .form-note {
+            background-color: #fff8e1;
+            border-left: 4px solid var(--warning);
+            padding: 15px;
+            margin-bottom: 25px;
+            border-radius: 4px;
+            font-size: 15px;
+        }
+
+        .form-note i {
+            color: var(--warning);
+            margin-right: 8px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+
+        .submit-button {
+            background-color: var(--secondary);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .submit-button:hover {
+            background-color: #36a420;
+        }
+
+        /* Contact Section */
+        .contact-section {
+            padding: 60px 0;
+            background-color: white;
+        }
+
+        .contact-info {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .contact-card {
+            background-color: var(--light);
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+            flex: 1;
+            min-width: 250px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s;
+        }
+
+        .contact-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .contact-card i {
+            font-size: 36px;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .contact-card h3 {
+            margin-bottom: 10px;
+            color: var(--dark);
+        }
+
+        .contact-card a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .contact-card a:hover {
+            color: #166fe5;
+            text-decoration: underline;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 40px 0 20px;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+
+        .footer-logo h3 {
+            font-size: 24px;
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        .footer-logo p {
+            opacity: 0.8;
+            max-width: 300px;
+        }
+
+        .footer-links h4, .footer-contact h4 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .footer-links ul {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        .footer-contact p {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .footer-contact i {
+            margin-right: 10px;
+            color: var(--primary);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            opacity: 0.7;
+            font-size: 14px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-container {
+                flex-wrap: wrap;
+            }
+            
+            nav {
+                display: none;
+                width: 100%;
+                order: 3;
+                margin-top: 15px;
+            }
+            
+            nav.active {
+                display: block;
+            }
+            
+            nav ul {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .hero h2 {
+                font-size: 32px;
+            }
+            
+            .hero p {
+                font-size: 16px;
+            }
+            
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-container {
+                padding: 25px;
+            }
+            
+            .footer-content {
+                flex-direction: column;
+                gap: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-container">
+            <div class="logo">
+                <i class="fab fa-facebook-square"></i>
+                <h1>EMBUX</h1>
+            </div>
+            
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <nav id="mainNav">
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#products">Products</a></li>
+                    <li><a href="#submit">Google Form</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="container">
+            <h2>Facebook Accounts sell</h2>
+            <p>Urgent Notice: Everyone, please check the requirements below️</p>
+            <p></p>
+            <a href="#products" class="cta-button">View Products</a>
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <section class="products" id="products">
+        <div class="container">
+            <div class="section-title">
+                <h2>Our Products</h2>
+            </div>
+            
+            <div class="products-grid">
+                <!-- Product 1 -->
+                <div class="product-card">
+                    <div class="product-header">
+                        <h3>WEBMAIL 00F 2FA</h3>
+                        <div class="product-price">6.70 <span>Taka</span></div>
+                        <p>UID + Password + 2FA + Webmail</p>
+                    </div>
+                    <div class="product-body">
+                        <ul class="product-features">
+                            <li><i class="fas fa-check-circle"></i> Facebook Account with 2FA</li>
+                            <li><i class="fas fa-check-circle"></i> Web Mail Access</li>
+                            <li><i class="fas fa-check-circle"></i> UID + Password Included</li>
+                            <li><i class="fas fa-check-circle"></i> Trusted Webmail Account</li>
+                        </ul>
+                        <button class="product-button" onclick="">Active & Working</button>
+                    </div>
+                </div>
+                
+                <!-- Product 2 -->
+                <div class="product-card">
+                    <div class="product-header">
+                        <h3>OUTLOOK MAIL TRUST 00F 2FA</h3>
+                        <div class="product-price">7.00 <span>Taka</span></div>
+                        <p>UID + Password + 2FA + Outlook mail Full</p>
+                    </div>
+                    <div class="product-body">
+                        <ul class="product-features">
+                            <li><i class="fas fa-check-circle"></i> Facebook Account with 2FA</li>
+                            <li><i class="fas fa-check-circle"></i> Outlook mail Full Access</li>
+                            <li><i class="fas fa-check-circle"></i> UID + Password Included</li>
+                            <li><i class="fas fa-check-circle"></i> Trusted Outlook mail Account</li>
+                        <button class="product-button" onclick="">Active & Working</button>
+                    </div>
+                </div>
+                
+                <!-- Product 3 -->
+                <div class="product-card">
+                    <div class="product-header">
+                        <h3>HOTMAIL TRUST 30F 2FA</h3>
+                        <div class="product-price">12.50 <span>Taka</span></div>
+                        <p>UID + Password + 2FA + Hotmail Full</p>
+                    </div>
+                    <div class="product-body">
+                        <ul class="product-features">
+                            <li><i class="fas fa-check-circle"></i> Facebook Account with 2FA</li>
+                            <li><i class="fas fa-check-circle"></i> Hotmail Full Access</li>
+                            <li><i class="fas fa-check-circle"></i> UID + Password Included</li>
+                            <li><i class="fas fa-check-circle"></i> Trusted Hotmail Account</li>
+                        </ul>
+                        <button class="product-button" onclick="">Active & Working</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Form Section -->
+    <section class="form-section" id="submit">
+        <div class="container">
+            <div class="section-title">
+                <h2>Google Form WEB MAIL TRUST 00F 2FA</h2>
+            </div>
+            
+            <div class="form-container">
+                <div class="form-note">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <strong>ফর্মটি ভালো করে লক্ষ্য করুন এবং সঠিক তথ্য দিন। ভুল তথ্য দিলে আপনার ফাইল বাতিল করা হবে। আইডি সাবমিট লিংক।⚠️</strong>
+                  <p>  <strong>ফাইল জমা দেওয়ার শেষ সময় 09:00pm ⏰<strong></strong>
+                </div>    
+                    <button type="submit" class="submit-button">
+                   <a href="https://forms.gle/fKeGvCPx7bLc5FZv8" target="_blank" class="visit-btn">Google From submit file</a>
+                    </button>
+                    </section>
+                    <!-- Form Section -->
+                    <section class="form-section" id="submit">
+                    <div class="container">
+                    <div class="section-title">
+                    <h2>Google Form OUTLOOK MAIL TRUST 00F 2FA</h2>
+                    </div>
+                    
+                    <div class="form-container">
+                    <div class="form-note">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <strong>ফর্মটি ভালো করে লক্ষ্য করুন এবং সঠিক তথ্য দিন। ভুল তথ্য দিলে আপনার ফাইল বাতিল করা হবে। আইডি সাবমিট লিংক।⚠️</strong>
+                    <p>  <strong>ফাইল জমা দেওয়ার শেষ সময় 09:00pm ⏰<strong></strong>
+                    </div>    
+                    <button type="submit" class="submit-button">
+                    <a href="https://forms.gle/gGcC4nh2866BoRuG8" target="_blank" class="visit-btn">Google From submit file</a>
+                </form>
+                </section>
+                <!-- Form Section -->
+                <section class="form-section" id="submit">
+                <div class="container">
+                <div class="section-title">
+                <h2>HOTMAIL TRUST 30F 2FA</h2>
+                </div>
+                
+                <div class="form-container">
+                <div class="form-note">
+                <i class="fas fa-exclamation-triangle"></i>
+                <strong>ফর্মটি ভালো করে লক্ষ্য করুন এবং সঠিক তথ্য দিন। ভুল তথ্য দিলে আপনার ফাইল বাতিল করা হবে। আইডি সাবমিট লিংক।⚠️</strong>
+                <p>  <strong>ফাইল জমা দেওয়ার শেষ সময় 09:00pm ⏰<strong></strong>
+                </div>    
+                <button type="submit" class="submit-button">
+                <a href="https://forms.gle/wGZrW18HHGiDah7o6" target="_blank" class="visit-btn">Google From submit file</a>
+                </form>
+            </div
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact-section" id="contact">
+        <div class="container">
+            <div class="section-title">
+                <h2>Contact Us</h2>
+            </div>
+            
+            <div class="contact-info">
+                <div class="contact-card">
+                    <i class="fab fa-telegram"></i>
+                    <h3>Telegram Channel</h3>
+                    <p>Join our Telegram channel for updates</p>
+                    <a href="https://t.me/FB_EMBUX7920" target="_blank">https://t.me/FB_EMBUX7920</a>
+                </div>
+                
+                <div class="contact-card">
+                    <i class="fas fa-headset"></i>
+                    <h3>Support Center 24/7</h3>
+                    <p>Telegram Support Center</p>
+                    <a href="https://t.me/AMIRUL7920" target="_blank">@AMIRUL7920</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <h3>Facebook Account Requirements</h3>
+                    <p> Friends: The account must have at least 30+ friends.
+                    Security: 2FA (Two-Factor Authentication) must be enabled/set up.
+                    Access: Full Email Access associated with the account must be provided.
+                    Condition: The account must be Fresh and free from any restrictions.</p>
+                </div>
+                
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#products">Products</a></li>
+                        <li><a href="#submit">Google Form</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                        <p>DONGVANFB CHECK LIVE UID</p>
+                        <a href="https://dongvanfb.net/check_live_uid/" target="_blank">https://dongvanfb.net/check_live_uid/</a>
+                    </ul>
+                </div>
+                
+                <div class="footer-contact">
+                    <h4>Contact Info</h4>
+                    <p><i class="fab fa-telegram"></i> Telegram username : @AMIRUL7920</p>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2026 MD AMIRUL ISLAM EMBUX</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mainNav = document.getElementById('mainNav');
+        
+        mobileMenuBtn.addEventListener('click', () => {
+            mainNav.classList.toggle('active');
+            
+            // Change icon
+            const icon = mobileMenuBtn.querySelector('i');
+            if (mainNav.classList.contains('active')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        });
+        
+        // Close mobile menu when clicking on a link
+        document.querySelectorAll('nav a').forEach(link => {
+            link.addEventListener('click', () => {
+                mainNav.classList.remove('active');
+                mobileMenuBtn.querySelector('i').classList.remove('fa-times');
+                mobileMenuBtn.querySelector('i').classList.add('fa-bars');
+            });
+        });
+        
+        // Product selection
+        function selectProduct(productId) {
+            const productType = document.getElementById('productType');
+            
+            if (productId === 1) {
+                productType.value = "1";
+            } else if (productId === 2) {
+                productType.value = "2";
+            } else if (productId === 3) {
+                productType.value = "3";
+            }
+            
+            // Scroll to form
+            document.getElementById('submit').scrollIntoView({
+                behavior: 'smooth'
+            });
+            
+            // Focus on the product select
+            productType.focus();
+        }
+        
+        // Form submission
+        document.getElementById('submitForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form values
+            const productType = document.getElementById('productType').value;
+            const username = document.getElementById('username').value;
+            const facebookId = document.getElementById('facebookId').value;
+            const email = document.getElementById('email').value;
+            
+            // Validate form
+            if (!productType || !username || !facebookId || !email) {
+                alert('Please fill in all required fields');
+                return;
+            }
+            
+            // In a real application, you would submit to Google Forms
+            // For this demo, we'll simulate submission
+            const productText = document.getElementById('productType').options[document.getElementById('productType').selectedIndex].text;
+            
+            alert(`Form submitted successfully!\n\nProduct: ${productText}\nUsername: ${username}\nFacebook ID: ${facebookId}\nEmail: ${email}\n\nIn the actual website, this would redirect to Google Forms.`);
+            
+            // Reset form
+            this.reset();
+        });
+        
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+    </script>
+</body>
+</html>

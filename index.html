@@ -1,0 +1,1794 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EMBUX - ALEX DIGITAL SHOP</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+        }
+
+        :root {
+            --primary: #1877f2;
+            --primary-dark: #0d5bb5;
+            --secondary: #42b72a;
+            --secondary-dark: #36a420;
+            --accent: #8a3ffc;
+            --dark: #121826;
+            --darker: #0a0e17;
+            --light: #f8fafc;
+            --lighter: #ffffff;
+            --gray: #64748b;
+            --gray-light: #e2e8f0;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --success: #10b981;
+            
+            --bg-color: var(--light);
+            --text-color: var(--dark);
+            --card-bg: var(--lighter);
+            --header-bg: rgba(255, 255, 255, 0.95);
+            --footer-bg: var(--dark);
+            --shadow: rgba(0, 0, 0, 0.08);
+            --shadow-hover: rgba(0, 0, 0, 0.15);
+            --border: var(--gray-light);
+            --gradient: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            --gradient-secondary: linear-gradient(135deg, var(--secondary) 0%, #3aa822 100%);
+            
+            --border-radius: 16px;
+            --border-radius-sm: 12px;
+            --border-radius-lg: 24px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        [data-theme="dark"] {
+            --bg-color: var(--darker);
+            --text-color: #f1f5f9;
+            --card-bg: var(--dark);
+            --header-bg: rgba(18, 24, 38, 0.95);
+            --footer-bg: #080b13;
+            --shadow: rgba(0, 0, 0, 0.3);
+            --shadow-hover: rgba(0, 0, 0, 0.5);
+            --border: #2d3748;
+            --gray-light: #334155;
+            --light: #1e293b;
+            --lighter: #121826;
+            --gradient: linear-gradient(135deg, var(--primary-dark) 0%, #7a2afc 100%);
+            --gradient-secondary: linear-gradient(135deg, var(--secondary-dark) 0%, #2e8a1e 100%);
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            transition: var(--transition);
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Lock Button Styles */
+        .lock-button {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: var(--gradient);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 9999;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lock-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
+        }
+
+        .lock-button.locked {
+            background: var(--danger);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(239, 68, 68, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+
+        /* Lock Overlay */
+        .lock-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 14, 23, 0.95);
+            backdrop-filter: blur(20px);
+            z-index: 9998;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        .lock-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .lock-content {
+            text-align: center;
+            max-width: 500px;
+            padding: 50px;
+            background: var(--dark);
+            border-radius: var(--border-radius-lg);
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.5);
+            border: 2px solid var(--primary);
+            transform: translateY(30px);
+            transition: transform 0.5s ease;
+        }
+
+        .lock-overlay.active .lock-content {
+            transform: translateY(0);
+        }
+
+        .lock-icon {
+            font-size: 80px;
+            color: var(--primary);
+            margin-bottom: 30px;
+            animation: lockShake 3s infinite;
+        }
+
+        @keyframes lockShake {
+            0%, 90%, 100% { transform: rotate(0deg); }
+            92% { transform: rotate(-5deg); }
+            96% { transform: rotate(5deg); }
+            98% { transform: rotate(-5deg); }
+        }
+
+        .lock-content h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .lock-content p {
+            color: var(--gray);
+            font-size: 1.125rem;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .unlock-button {
+            background: var(--gradient);
+            color: white;
+            border: none;
+            padding: 18px 40px;
+            border-radius: var(--border-radius);
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin: 0 auto;
+            transition: var(--transition);
+            box-shadow: 0 10px 30px rgba(24, 119, 242, 0.3);
+        }
+
+        .unlock-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(24, 119, 242, 0.4);
+        }
+
+        /* Rest of your existing CSS remains exactly the same */
+        /* Header Styles */
+        header {
+            background-color: var(--header-bg);
+            box-shadow: 0 4px 20px var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: var(--transition);
+            backdrop-filter: blur(10px);
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            background: var(--gradient);
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 6px 20px rgba(24, 119, 242, 0.25);
+        }
+
+        .logo-icon i {
+            color: white;
+            font-size: 24px;
+        }
+
+        .logo-text h1 {
+            font-size: 28px;
+            font-weight: 800;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.5px;
+        }
+
+        .logo-text p {
+            font-size: 12px;
+            color: var(--gray);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-top: 2px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        /* Enhanced Theme Toggle */
+        .theme-toggle {
+            background: transparent;
+            border: 2px solid var(--border);
+            font-size: 20px;
+            color: var(--text-color);
+            cursor: pointer;
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .theme-toggle:hover {
+            transform: rotate(15deg);
+            border-color: var(--primary);
+            color: var(--primary);
+            box-shadow: 0 0 20px rgba(24, 119, 242, 0.2);
+        }
+
+        [data-theme="dark"] .theme-toggle {
+            color: #fbbf24;
+            border-color: rgba(251, 191, 36, 0.3);
+        }
+
+        [data-theme="dark"] .theme-toggle:hover {
+            color: #fcd34d;
+            border-color: rgba(251, 191, 36, 0.5);
+            box-shadow: 0 0 20px rgba(251, 191, 36, 0.2);
+        }
+
+        .theme-toggle .fa-sun {
+            display: none;
+        }
+
+        [data-theme="dark"] .theme-toggle .fa-moon {
+            display: none;
+        }
+
+        [data-theme="dark"] .theme-toggle .fa-sun {
+            display: block;
+        }
+
+        /* Navigation */
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 32px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 600;
+            font-size: 16px;
+            transition: var(--transition);
+            position: relative;
+            padding: 8px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        nav a i {
+            font-size: 14px;
+            opacity: 0.7;
+        }
+
+        nav a:before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 3px;
+            bottom: 0;
+            left: 0;
+            background: var(--gradient);
+            border-radius: 3px;
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        nav a:hover:before {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+
+        nav a:hover {
+            color: var(--primary);
+        }
+
+        nav a:hover i {
+            opacity: 1;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: transparent;
+            color: var(--text-color);
+            border: 2px solid var(--border);
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
+            font-size: 20px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .mobile-menu-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 120px 0 100px;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 40px;
+        }
+
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(24, 119, 242, 0.1) 0%, rgba(66, 183, 42, 0.05) 100%);
+            z-index: -1;
+        }
+
+        [data-theme="dark"] .hero-bg {
+            background: linear-gradient(135deg, rgba(24, 119, 242, 0.08) 0%, rgba(66, 183, 42, 0.03) 100%);
+        }
+
+        .hero-content {
+            text-align: center;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .hero h2 {
+            font-size: 3.5rem;
+            margin-bottom: 24px;
+            line-height: 1.2;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            max-width: 700px;
+            margin: 0 auto 40px;
+            color: var(--gray);
+        }
+
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--gradient);
+            color: white;
+            padding: 18px 44px;
+            border-radius: var(--border-radius);
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 18px;
+            transition: var(--transition);
+            box-shadow: 0 10px 30px rgba(24, 119, 242, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-button:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.7s ease;
+        }
+
+        .cta-button:hover:before {
+            left: 100%;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(24, 119, 242, 0.4);
+        }
+
+        /* Section Title */
+        .section-title {
+            text-align: center;
+            margin-bottom: 70px;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            margin-bottom: 16px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title h2:after {
+            content: '';
+            position: absolute;
+            width: 80px;
+            height: 5px;
+            background: var(--gradient);
+            bottom: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 5px;
+        }
+
+        .section-title p {
+            font-size: 1.125rem;
+            color: var(--gray);
+            max-width: 700px;
+            margin: 24px auto 0;
+        }
+
+        /* Products Section */
+        .products {
+            padding: 100px 0;
+            background-color: var(--bg-color);
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 32px;
+        }
+
+        .product-card {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius-lg);
+            overflow: hidden;
+            box-shadow: 0 15px 40px var(--shadow);
+            transition: var(--transition);
+            border: 1px solid var(--border);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-card:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 25px 60px var(--shadow-hover);
+            border-color: var(--primary);
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--gradient-secondary);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 700;
+            z-index: 1;
+        }
+
+        .product-header {
+            background: var(--gradient);
+            color: white;
+            padding: 40px 30px 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .product-header h3 {
+            font-size: 1.75rem;
+            margin-bottom: 16px;
+        }
+
+        .product-price {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: baseline;
+            justify-content: center;
+        }
+
+        .product-price span {
+            font-size: 1.25rem;
+            font-weight: 500;
+            opacity: 0.9;
+            margin-left: 4px;
+        }
+
+        .product-header p {
+            opacity: 0.9;
+            font-size: 1rem;
+        }
+
+        .product-body {
+            padding: 30px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-features {
+            list-style: none;
+            margin-bottom: 30px;
+            flex-grow: 1;
+        }
+
+        .product-features li {
+            padding: 14px 0;
+            border-bottom: 1px dashed var(--border);
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .product-features li:last-child {
+            border-bottom: none;
+        }
+
+        .product-features i {
+            color: var(--success);
+            margin-right: 14px;
+            font-size: 18px;
+            flex-shrink: 0;
+            margin-top: 3px;
+        }
+
+        .product-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            width: 100%;
+            padding: 18px;
+            background: var(--gradient);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            font-weight: 700;
+            font-size: 17px;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 6px 20px rgba(24, 119, 242, 0.25);
+        }
+
+        .product-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(24, 119, 242, 0.35);
+        }
+
+        /* Form Section */
+        .form-section {
+            padding: 100px 0;
+            background-color: var(--light);
+        }
+
+        .form-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius-lg);
+            padding: 50px;
+            box-shadow: 0 20px 60px var(--shadow);
+            border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .form-container:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: var(--gradient);
+        }
+
+        .form-note {
+            background-color: rgba(245, 158, 11, 0.1);
+            border-left: 4px solid var(--warning);
+            padding: 24px;
+            margin-bottom: 36px;
+            border-radius: var(--border-radius-sm);
+            font-size: 16px;
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+        }
+
+        [data-theme="dark"] .form-note {
+            background-color: rgba(245, 158, 11, 0.15);
+        }
+
+        .form-note i {
+            color: var(--warning);
+            font-size: 24px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .submit-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            background: var(--gradient);
+            color: white;
+            padding: 20px 30px;
+            border: none;
+            border-radius: var(--border-radius);
+            font-weight: 700;
+            font-size: 18px;
+            cursor: pointer;
+            transition: var(--transition);
+            width: 100%;
+            margin-top: 10px;
+            box-shadow: 0 8px 25px rgba(66, 183, 42, 0.3);
+        }
+
+        .submit-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(66, 183, 42, 0.4);
+        }
+
+        .submit-button a {
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Quick Links Section */
+        .quick-links-section {
+            padding: 100px 0;
+            background-color: var(--light);
+        }
+
+        .quick-links-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 32px;
+            margin-top: 40px;
+        }
+
+        .quick-link-card {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius-lg);
+            padding: 50px 40px;
+            text-align: center;
+            box-shadow: 0 15px 40px var(--shadow);
+            transition: var(--transition);
+            border: 2px solid transparent;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .quick-link-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 60px var(--shadow-hover);
+            border-color: var(--primary);
+        }
+
+        .quick-link-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--gradient);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .quick-link-icon i {
+            color: white;
+            font-size: 36px;
+        }
+
+        .quick-link-card h3 {
+            margin-bottom: 20px;
+            color: var(--text-color);
+            font-size: 1.75rem;
+        }
+
+        .quick-link-card p {
+            color: var(--gray);
+            margin-bottom: 30px;
+            font-size: 1.125rem;
+            flex-grow: 1;
+        }
+
+        .quick-link-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: var(--gradient);
+            color: white;
+            padding: 16px 32px;
+            border-radius: var(--border-radius);
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 16px;
+            transition: var(--transition);
+            box-shadow: 0 6px 20px rgba(24, 119, 242, 0.25);
+        }
+
+        .quick-link-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(24, 119, 242, 0.35);
+        }
+
+        /* Contact Section */
+        .contact-section {
+            padding: 100px 0;
+            background-color: var(--card-bg);
+        }
+
+        .contact-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 32px;
+            margin-top: 40px;
+        }
+
+        .contact-card {
+            background-color: var(--light);
+            padding: 40px;
+            border-radius: var(--border-radius-lg);
+            text-align: center;
+            box-shadow: 0 15px 40px var(--shadow);
+            transition: var(--transition);
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .contact-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 60px var(--shadow-hover);
+            border-color: var(--primary);
+        }
+
+        .contact-icon {
+            width: 70px;
+            height: 70px;
+            background: var(--gradient);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 25px;
+        }
+
+        .contact-icon i {
+            color: white;
+            font-size: 30px;
+        }
+
+        .contact-card h3 {
+            margin-bottom: 15px;
+            color: var(--text-color);
+            font-size: 1.5rem;
+        }
+
+        .contact-card p {
+            color: var(--gray);
+            margin-bottom: 25px;
+            font-size: 1rem;
+        }
+
+        .telegram-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: linear-gradient(135deg, #0088cc, #00a2ed);
+            color: white;
+            padding: 14px 28px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 16px;
+            transition: var(--transition);
+            box-shadow: 0 6px 20px rgba(0, 136, 204, 0.25);
+            margin-top: 10px;
+        }
+
+        .telegram-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(0, 136, 204, 0.35);
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--footer-bg);
+            color: white;
+            padding: 80px 0 30px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 60px;
+            margin-bottom: 60px;
+        }
+
+        .footer-logo h3 {
+            font-size: 1.75rem;
+            margin-bottom: 24px;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .footer-logo p {
+            opacity: 0.8;
+            line-height: 1.8;
+            margin-bottom: 16px;
+            font-size: 15px;
+        }
+
+        .footer-links h4, .footer-contact h4 {
+            font-size: 1.25rem;
+            margin-bottom: 24px;
+            color: white;
+        }
+
+        .footer-links ul {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 14px;
+        }
+
+        .footer-links a {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .footer-links a:hover {
+            color: white;
+            padding-left: 8px;
+        }
+
+        .footer-links a i {
+            font-size: 14px;
+            opacity: 0.7;
+        }
+
+        .footer-contact p {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            color: rgba(255,255,255,0.8);
+        }
+
+        .footer-contact i {
+            margin-right: 14px;
+            color: var(--primary);
+            font-size: 18px;
+            width: 20px;
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 40px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            opacity: 0.7;
+            font-size: 15px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .hero h2 {
+                font-size: 3rem;
+            }
+            
+            .section-title h2 {
+                font-size: 2.25rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-container {
+                flex-wrap: wrap;
+                padding: 12px 0;
+            }
+            
+            .header-right {
+                order: 2;
+                width: 100%;
+                justify-content: flex-end;
+                margin-top: 15px;
+            }
+            
+            nav {
+                display: none;
+                width: 100%;
+                order: 3;
+                margin-top: 20px;
+            }
+            
+            nav.active {
+                display: block;
+            }
+            
+            nav ul {
+                flex-direction: column;
+                gap: 0;
+                background: var(--card-bg);
+                border-radius: var(--border-radius);
+                padding: 10px;
+                box-shadow: 0 10px 30px var(--shadow);
+                border: 1px solid var(--border);
+            }
+            
+            nav li {
+                border-bottom: 1px solid var(--border);
+            }
+            
+            nav li:last-child {
+                border-bottom: none;
+            }
+            
+            nav a {
+                display: flex;
+                padding: 18px 16px;
+            }
+            
+            .mobile-menu-btn {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            
+            .hero {
+                padding: 100px 0 80px;
+            }
+            
+            .hero h2 {
+                font-size: 2.5rem;
+            }
+            
+            .hero p {
+                font-size: 1.125rem;
+                padding: 0 10px;
+            }
+            
+            .cta-button {
+                padding: 16px 36px;
+                font-size: 17px;
+            }
+            
+            .products-grid {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+            
+            .product-card {
+                margin: 0;
+            }
+            
+            .form-container {
+                padding: 30px 24px;
+                margin: 0;
+            }
+            
+            .quick-links-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .quick-link-card {
+                padding: 40px 30px;
+                margin: 0;
+            }
+            
+            .contact-card {
+                margin: 0;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+            
+            /* Lock button responsive */
+            .lock-button {
+                bottom: 20px;
+                right: 20px;
+                width: 55px;
+                height: 55px;
+                font-size: 22px;
+            }
+            
+            .lock-content {
+                padding: 30px;
+                margin: 0 20px;
+            }
+            
+            .lock-icon {
+                font-size: 60px;
+            }
+            
+            .lock-content h2 {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo-text h1 {
+                font-size: 24px;
+            }
+            
+            .logo-icon {
+                width: 42px;
+                height: 42px;
+            }
+            
+            .theme-toggle, .mobile-menu-btn {
+                width: 48px;
+                height: 48px;
+            }
+            
+            .hero h2 {
+                font-size: 2rem;
+            }
+            
+            .section-title h2 {
+                font-size: 1.75rem;
+            }
+            
+            .product-price {
+                font-size: 3rem;
+            }
+            
+            .quick-link-card {
+                padding: 35px 25px;
+            }
+            
+            .contact-card {
+                padding: 35px 25px;
+            }
+        }
+
+        /* Animation for elements */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .delay-1 {
+            animation-delay: 0.2s;
+        }
+
+        .delay-2 {
+            animation-delay: 0.4s;
+        }
+
+        .delay-3 {
+            animation-delay: 0.6s;
+        }
+
+        /* Stats section */
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            margin-top: 80px;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 800;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            color: var(--gray);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Lock Button -->
+    <button class="lock-button" id="lockButton">
+        <i class="fas fa-lock"></i>
+    </button>
+
+    <!-- Lock Overlay -->
+    <div class="lock-overlay" id="lockOverlay">
+        <div class="lock-content">
+            <div class="lock-icon">
+                <i class="fas fa-lock"></i>
+            </div>
+            <h2>Website Locked</h2>
+            <p>This website has been temporarily locked for security reasons. To continue browsing, please click the unlock button below.</p>
+            <button class="unlock-button" id="unlockButton">
+                <i class="fas fa-unlock"></i> Unlock Website
+            </button>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <div class="container header-container">
+            <a href="#home" class="logo">
+                <div class="logo-icon">
+                    <i class="fab fa-facebook-square"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>EMBUX</h1>
+                    <p>Alex Digital Shop</p>
+                </div>
+                
+        </a>
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+        .wip-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        padding: 15px;
+        background: transparent; /* যেকোনো ব্যাকগ্রাউন্ডে সেট হবে */
+        }
+        
+        .wip-text {
+        color: #888; /* আপনার নির্দিষ্ট কালার কোড */
+        font-size: 13px; /* প্রফেশনাল ছোট ফন্ট */
+        font-weight: 500;
+        letter-spacing: 0.3px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        }
+        
+        .animated-emoji {
+        display: inline-block;
+        font-size: 12px; /* ইমোজিটি টেক্সটের সাথে সামঞ্জস্যপূর্ণ ছোট রাখা হয়েছে */
+        animation: live-pulse 2s infinite ease-in-out;
+        filter: drop-shadow(0 0 3px rgba(76, 175, 80, 0.5)); /* হালকা গ্লো এফেক্ট */
+        }
+        
+        /* প্রফেশনাল লাইভ পালস অ্যানিমেশন */
+        @keyframes live-pulse {
+        0% { transform: scale(0.9); opacity: 0.7; }
+        50% { transform: scale(1.2); opacity: 1; }
+        100% { transform: scale(0.9); opacity: 0.7; }
+        }
+        
+        .status-dot {
+        width: 4px;
+        height: 4px;
+        background-color: #888;
+        border-radius: 50%;
+        display: inline-block;
+        animation: blink 1.5s infinite;
+        vertical-align: middle;
+        }
+        
+        @keyframes blink {
+        0%, 100% { opacity: 0.3; }
+        50% { opacity: 1; }
+        }
+        </style>
+        </head>
+        <body>
+        
+        <div class="wip-container">
+        <div class="wip-text">
+        <span class="animated-emoji">🟢</span>
+        Work is currently in progress on our website<span class="status-dot"></span>
+        </div>
+        </div>
+        
+        </body>
+        </html>
+        
+            
+            
+            <div class="header-right">
+                <button class="theme-toggle" id="themeToggle">
+                    <i class="fas fa-moon"></i>
+                    <i class="fas fa-sun"></i>
+                </button>
+                
+                <button class="mobile-menu-btn" id="mobileMenuBtn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+            
+            <nav id="mainNav">
+                <ul>
+                    <li><a href="#home"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="#products"><i class="fas fa-user-circle"></i> Account Types</a></li>
+                    <li><a href="#submit"><i class="fas fa-file-alt"></i> Submit Files</a></li>
+                    <li><a href="#hotmail-register"><i class="fas fa-envelope"></i> Hotmail Register</a></li>
+                    <li><a href="#contact"><i class="fas fa-headset"></i> Support Center</a></li>
+                    <li><a href="#quick-links"><i class="fas fa-check-circle"></i> Check UID Status</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-bg"></div>
+        <div class="container">
+            <div class="hero-content fade-in">
+            
+                <h2>Sell Your Facebook Account Securely</h2>
+                <p>EMBUX provides a trusted platform to sell your Facebook accounts with full security and fair pricing. Get paid quickly for your verified accounts.</p>
+                <a href="#products" class="cta-button">
+                    <i class="fas fa-shopping-cart"></i> View Account Types & Prices
+                </a>
+                
+                <div class="stats">
+                    <div class="stat-item fade-in delay-1">
+                        <div class="stat-number">2,850+</div>
+                        <div class="stat-label">Accounts Sold</div>
+                    </div>
+                    <div class="stat-item fade-in delay-2">
+                        <div class="stat-number">48h</div>
+                        <div class="stat-label">Payment Processing</div>
+                    </div>
+                    <div class="stat-item fade-in delay-3">
+                        <div class="stat-number">100%</div>
+                        <div class="stat-label">Secure Transactions</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <section class="products" id="products">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>Facebook Account Types We Buy</h2>
+                <p>We purchase various types of Facebook accounts with specific requirements. Select your account type below to see pricing and submission details.</p>
+            </div>
+            
+            <div class="products-grid">
+                <!-- Product 1 -->
+                <div class="product-card fade-in">
+                    <div class="product-header">
+                        <h3>WEB MAIL TRUST 0 FRIEND 2FA</h3>
+                        <div class="product-price">7.30 <span>Taka</span></div>
+                        <p>UID + Password + 2FA + Web mail Full</p>
+                    </div>
+                    <div class="product-body">
+                        <ul class="product-features">
+                            <li><i class="fas fa-check-circle"></i> Facebook Account with 2FA Enabled</li>
+                            <li><i class="fas fa-check-circle"></i> Full Web Mail Access Included</li>
+                            <li><i class="fas fa-check-circle"></i> UID + Password + 2FA + Full Mail</li>
+                            <li><i class="fas fa-check-circle"></i> Trusted Web Mail</li>
+                            <li><i class="fas fa-check-circle"></i> You will receive the report within 48 hours of submitting the file. On our Telegram channel</li>
+                            <div class="wip-container">
+                            <div class="wip-text">
+                            <span class="animated-emoji">🔴</span>The current work is closed.</li>
+                        </ul>
+                        <button class="product-button" onclick="document.getElementById('webmail-form').scrollIntoView({behavior: 'smooth'})">
+                            <i class="fab fa-google"></i> Submit This Account
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Product 2 -->
+                <div class="product-card fade-in delay-1">
+                    <div class="product-header">
+                        <h3>WEB MAIL TRUST 30 FRIEND 2FA</h3>
+                        <div class="product-price">11.00 <span>Taka</span></div>
+                        <p>UID + Password + 2FA + Web mail Full</p>
+                    </div>
+                    <div class="product-body">
+                        <ul class="product-features">
+                            <li><i class="fas fa-check-circle"></i> Facebook Account with 2FA Enabled</li>
+                            <li><i class="fas fa-check-circle"></i> Full Web Mail Access Included</li>
+                            <li><i class="fas fa-check-circle"></i> UID + Password + 2FA + Full Mail</li>
+                            <li><i class="fas fa-check-circle"></i> Trusted Web Mail</li>
+                            <li><i class="fas fa-check-circle"></i> You will receive the report within 48 hours of submitting the file. On our Telegram channel</li>
+                           <div class="wip-container">
+                            <div class="wip-text">
+                            <span class="animated-emoji">🔴</span>The current work is closed.</li>
+                        </ul>
+                        <button class="product-button" onclick="document.getElementById('outlook-form').scrollIntoView({behavior: 'smooth'})">
+                            <i class="fab fa-google"></i> Submit This Account
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Product 3 -->
+                <div class="product-card fade-in delay-2">
+                    <div class="product-header">
+                        <h3>HOT MAIL TRUST 30 FRIEND 2FA</h3>
+                        <div class="product-price">12.20 <span>Taka</span></div>
+                        <p>UID + Password + 2FA + Hot mail Full</p>
+                    </div>
+                    <div class="product-body">
+                        <ul class="product-features">
+                            <li><i class="fas fa-check-circle"></i> Facebook Account with 2FA Enabled</li>
+                            <li><i class="fas fa-check-circle"></i> Full Hot Mail Access Included</li>
+                            <li><i class="fas fa-check-circle"></i> UID + Password + 2FA + Full Mail</li>
+                            <li><i class="fas fa-check-circle"></i> Trusted Hot Mail</li>
+                            <li><i class="fas fa-check-circle"></i> Minimum 30 Friends Required</li>
+                            <li><i class="fas fa-check-circle"></i> You will receive the report within 48 hours of submitting the file. On our Telegram channel</li>
+                            <div class="wip-container">
+                            <div class="wip-text">
+                            <span class="animated-emoji">🟢</span>The current work is open</li>
+                     </ul>
+                        <button class="product-button" onclick="document.getElementById('hotmail-form').scrollIntoView({behavior: 'smooth'})">
+                            <i class="fab fa-google"></i> Submit This Account
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Form Section -->
+    <section class="form-section" id="submit">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>Submit Your Facebook Accounts</h2>
+                <p>Select your account type and submit through the appropriate Google Form. Please ensure all information is accurate to avoid rejection.</p>
+            </div>
+            
+            <!-- Web Mail Form -->
+            <div class="form-container fade-in" id="webmail-form">
+                <div class="section-title" style="margin-bottom: 30px;">
+                    <h3 style="font-size: 1.75rem;">WEB MAIL TRUST 0 FRIEND 2FA</h3>
+                </div>
+                
+                <div class="form-note">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <div>
+                        <strong>Please review the form carefully and provide accurate information. Incorrect information will result in your file being rejected.</strong>
+                        <p style="margin-top: 10px;"><strong>⏰ Last time for file submission: 09:00 PM (Bangladesh Time)</strong></p>
+                    </div>
+                </div>    
+                <button type="submit" class="submit-button">
+                    <a href="https://forms.gle/fKeGvCPx7bLc5FZv8" target="_blank">
+                        <i class="fab fa-google"></i> Submit to Google Form
+                    </a>
+                </button>
+            </div>
+            
+            <!-- Outlook Mail Form -->
+            <div class="form-container fade-in delay-1" id="outlook-form" style="margin-top: 60px;">
+                <div class="section-title" style="margin-bottom: 30px;">
+                    <h3 style="font-size: 1.75rem;">WEB MAIL TRUST 30 FRIEND 2FA</h3>
+                </div>
+                
+                <div class="form-note">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <div>
+                        <strong>Please review the form carefully and provide accurate information. Incorrect information will result in your file being rejected.</strong>
+                        <p style="margin-top: 10px;"><strong>⏰ Last time for file submission: 09:00 PM (Bangladesh Time)</strong></p>
+                    </div>
+                </div>    
+                <button type="submit" class="submit-button">
+                    <a href="https://forms.gle/gGcC4nh2866BoRuG8" target="_blank">
+                        <i class="fab fa-google"></i> Submit to Google Form
+                    </a>
+                </button>
+            </div>
+            
+            <!-- Hot Mail Form -->
+            <div class="form-container fade-in delay-2" id="hotmail-form" style="margin-top: 60px;">
+                <div class="section-title" style="margin-bottom: 30px;">
+                    <h3 style="font-size: 1.75rem;">HOT MAIL TRUST 30 FRIEND 2FA</h3>
+                </div>
+                
+                <div class="form-note">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <div>
+                        <strong>Please review the form carefully and provide accurate information. Incorrect information will result in your file being rejected.</strong>
+                        <p style="margin-top: 10px;"><strong>⏰ Last time for file submission: 09:00 PM (Bangladesh Time)</strong></p>
+                    </div>
+                </div>    
+                <button type="submit" class="submit-button">
+                    <a href="https://forms.gle/wGZrW18HHGiDah7o6" target="_blank">
+                        <i class="fab fa-google"></i> Submit to Google Form
+                    </a>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Hotmail Register Section -->
+    <section class="quick-links-section" id="hotmail-register">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>Register for Premium Hotmail Accounts</h2>
+                <p>Need high-quality Hotmail accounts for your Facebook profiles? We provide 100% verified and fresh email accounts with full access.</p>
+            </div>
+            
+            <div class="quick-links-grid">
+                <div class="quick-link-card fade-in">
+                    <div class="quick-link-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <h3>Register to Buy Hotmail</h3>
+                    <p>Get premium Hotmail accounts with full access for your Facebook profiles. Our accounts are 100% verified, fresh, and ready for immediate use with complete security.</p>
+                    <a href="https://hotmail143.com/register.php?ref=REF0304E9" target="_blank" class="quick-link-button">
+                        <i class="fas fa-external-link-alt"></i> Register Now
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact-section" id="contact">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>24/7 Support Center</h2>
+                <p>Our support team is available around the clock to assist you with any questions or issues regarding account submissions and payments.</p>
+            </div>
+            
+            <div class="contact-info">
+                <div class="contact-card fade-in">
+                    <div class="contact-icon">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <h3>Direct Support</h3>
+                    <p>Contact our support team directly on Telegram for immediate assistance with your account submissions or payment issues.</p>
+                    <a href="https://t.me/Alex_EMBUX7920" target="_blank" class="telegram-btn">
+                        <i class="fab fa-telegram"></i> Telegram Support</a>
+                    </a>
+                </div>
+                
+                <div class="contact-card fade-in delay-1">
+                    <div class="contact-icon">
+                        <i class="fab fa-telegram"></i>
+                    </div>
+                    <h3>Backup Channel</h3>
+                    <p>Join our backup Telegram channel for important updates, announcements, and alternative contact methods.</p>
+                    <a href="https://t.me/EMBUX8504" target="_blank" class="telegram-btn">
+                        <i class="fab fa-telegram"></i> backup Telegram channel</a>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Links Section -->
+    <section class="quick-links-section" id="quick-links">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>Account Verification Tools</h2>
+                <p>Use our verification tools to check the status of your Facebook accounts before submission to ensure they meet our requirements.</p>
+            </div>
+            
+            <div class="quick-links-grid">
+                <!-- Check Live UID Button -->
+                <div class="quick-link-card fade-in">
+                    <div class="quick-link-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h3>Check UID Status</h3>
+                    <p>Verify the status and validity of Facebook UIDs using our live checking tool. Ensure your accounts are active and meet our requirements before submission.</p>
+                    <a href="https://hitools.pro/check-live-uid" target="_blank" class="quick-link-button">
+                        <i class="fas fa-external-link-alt"></i> Check UID Now
+                    </a>
+                </div>
+                
+                <!-- Telegram Channel Button -->
+                <div class="quick-link-card fade-in delay-1">
+                    <div class="quick-link-icon">
+                        <i class="fab fa-telegram"></i>
+                    </div>
+                    <h3>Official Channel</h3>
+                    <p>Join our main Telegram channel for the latest updates, announcements, payment proofs, and important information about our services.</p>
+                    <a href="https://t.me/AlexDigitalShopBD" target="_blank" class="quick-link-button">
+                        <i class="fab fa-telegram"></i> Join Channel
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo fade-in">
+                    <h3>Account Requirements & Privacy Policy</h3>
+                    <p>1. A Facebook account must have at least 30 friends for accounts.</p>
+                    <p>2. Security: 2FA (Two-Factor Authentication) must be enabled on all accounts.</p>
+                    <p>3. Access: Full email access associated with the account must be provided.</p>
+                    <p>4. Condition: Accounts must be fresh and free from restrictions or blocks.</p>
+                    <p>5. Submission of files is voluntary and requires informed consent from users.</p>
+                </div>
+                
+                <div class="footer-links fade-in delay-1">
+                    <h4>Quick Navigation</h4>
+                    <ul>
+                        <li><a href="#home"><i class="fas fa-chevron-right"></i> Home</a></li>
+                        <li><a href="#products"><i class="fas fa-chevron-right"></i> Account Types</a></li>
+                        <li><a href="#submit"><i class="fas fa-chevron-right"></i> Submit Files</a></li>
+                        <li><a href="#hotmail-register"><i class="fas fa-chevron-right"></i> Hotmail Register</a></li>
+                        <li><a href="#contact"><i class="fas fa-chevron-right"></i> Support Center</a></li>
+                        <li><a href="#quick-links"><i class="fas fa-chevron-right"></i> Check UID Status</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright fade-in">
+                <p>&copy; 2026 EMBUX - Premium Facebook Account Marketplace. All rights reserved.</p>
+                <p style="margin-top: 10px; font-size: 14px;">Powered by Alex James</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Lock/Unlock functionality
+        const lockButton = document.getElementById('lockButton');
+        const lockOverlay = document.getElementById('lockOverlay');
+        const unlockButton = document.getElementById('unlockButton');
+        const body = document.body;
+        
+        // Check if website is locked from previous session
+        const isLocked = localStorage.getItem('websiteLocked') === 'true';
+        
+        if (isLocked) {
+            lockWebsite();
+        }
+        
+        // Lock button click event
+        lockButton.addEventListener('click', () => {
+            if (lockOverlay.classList.contains('active')) {
+                unlockWebsite();
+            } else {
+                lockWebsite();
+            }
+        });
+        
+        // Unlock button click event
+        unlockButton.addEventListener('click', unlockWebsite);
+        
+        // Lock website function
+        function lockWebsite() {
+            lockOverlay.classList.add('active');
+            lockButton.classList.add('locked');
+            lockButton.innerHTML = '<i class="fas fa-unlock"></i>';
+            body.style.overflow = 'hidden'; // Prevent scrolling
+            localStorage.setItem('websiteLocked', 'true');
+        }
+        
+        // Unlock website function
+        function unlockWebsite() {
+            lockOverlay.classList.remove('active');
+            lockButton.classList.remove('locked');
+            lockButton.innerHTML = '<i class="fas fa-lock"></i>';
+            body.style.overflow = ''; // Enable scrolling
+            localStorage.setItem('websiteLocked', 'false');
+        }
+        
+        // Enhanced Theme toggle functionality
+        const themeToggle = document.getElementById('themeToggle');
+        
+        // Check for saved theme or prefer-color-scheme
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        
+        // Set initial theme
+        if (savedTheme === 'dark' || (savedTheme === 'auto' && prefersDark)) {
+            body.setAttribute('data-theme', 'dark');
+        }
+        
+        themeToggle.addEventListener('click', () => {
+            // Toggle theme
+            if (body.getAttribute('data-theme') === 'dark') {
+                body.setAttribute('data-theme', 'light');
+                localStorage.setItem('theme', 'light');
+            } else {
+                body.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+            }
+            
+            // Add animation class
+            themeToggle.classList.add('clicked');
+            setTimeout(() => {
+                themeToggle.classList.remove('clicked');
+            }, 300);
+        });
+        
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mainNav = document.getElementById('mainNav');
+        
+        mobileMenuBtn.addEventListener('click', () => {
+            mainNav.classList.toggle('active');
+            
+            // Change icon
+            const icon = mobileMenuBtn.querySelector('i');
+            if (mainNav.classList.contains('active')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        });
+        
+        // Close mobile menu when clicking on a link
+        document.querySelectorAll('nav a').forEach(link => {
+            link.addEventListener('click', () => {
+                mainNav.classList.remove('active');
+                const icon = mobileMenuBtn.querySelector('i');
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            });
+        });
+        
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    e.preventDefault();
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 100,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        // Add fade-in animation on scroll
+        const fadeElements = document.querySelectorAll('.fade-in');
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animationPlayState = 'running';
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, {
+            threshold: 0.1
+        });
+        
+        fadeElements.forEach(el => {
+            // Set initial state
+            el.style.animationPlayState = 'paused';
+            observer.observe(el);
+        });
+        
+        // Add hover effect to product cards
+        document.querySelectorAll('.product-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.zIndex = '10';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.zIndex = '1';
+            });
+        });
+    </script>
+</body>
+</html>
